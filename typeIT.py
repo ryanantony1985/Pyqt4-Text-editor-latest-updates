@@ -1,4 +1,5 @@
-# Importing Modules
+#!c:\Python27\python.exe
+# # Importing Modules
 
 import sys 
 import os
@@ -309,10 +310,26 @@ class Window(QtGui.QMainWindow):
         self.tab.addTab(self.textEdit, "New Tab")
 
     def closeTab(self):
+        print('closeTab: closeTab called')
         widget = self.tab.currentWidget()
         if widget:
-            widget.deleteLater()
-        self.tab.removeTab(self.tab.currentIndex())
+            print('closeTab: widget is {}'.format(type(widget)))
+            print('closeTab: widget text is {}'.format(widget.toPlainText()))
+            if widget.toPlainText() == self.saved_data:
+                print('closeTab: unsaved data before close')
+                choice = QtGui.QMessageBox.question(self,'You have changes!','Do you want to save before Exit?',
+                        QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard|QtGui.QMessageBox.Cancel)
+                
+                if choice == QtGui.QMessageBox.Save:
+                    self.File_save()
+                    # after saving the tab will be closed after if-else suite
+                elif choice == QtGui.QMessageBox.Discard:
+                    pass
+                else:
+                    # do nothing and do not close the tab
+                    return
+            # widget.deleteLater()
+            self.tab.removeTab(self.tab.currentIndex())
        
 
         #if self.tab.count() ==0: # CLose Application if all the tabs are closed!
@@ -431,7 +448,9 @@ class Window(QtGui.QMainWindow):
     def Print(self):
         dialog = QtGui.QPrintDialog()
         if dialog.exec_() == QtGui.QDialog.Accepted:
+            # temporarily commented out by Patrick because I can't run it
             self.text.document().print(dialog.printer())
+            pass
 
 
     def PageView(self):
